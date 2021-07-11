@@ -1,0 +1,32 @@
+{
+    "name": "graphql",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "serverless offline start",
+        "deploy": "cross-env NODE_ENV=production serverless deploy --stage prod",
+        "lint": "eslint '*/**/*.{js,ts}' --quiet --fix"
+    },
+    "keywords": [],
+    "author": "Joel Kerfoot",
+    "license": "ISC",
+    "dependencies": {
+        "apollo-server-lambda": "^2.25.2",
+        "graphql": "^15.5.1"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.28.2",
+        "@typescript-eslint/parser": "^4.28.2",
+        "cross-env": "^7.0.3",
+        "eslint": "^7.30.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "prettier": "^2.3.2",
+        "serverless-dotenv-plugin": "^3.9.0",
+        "serverless-offline": "^7.0.0",
+        "serverless-webpack": "^5.5.1",
+        "ts-loader": "^9.2.3",
+        "typescript": "^4.3.5",
+        "webpack": "^5.44.0",
+        "webpack-node-externals": "^3.0.0"
+    }
+}
