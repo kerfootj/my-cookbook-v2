@@ -1,3 +1,4 @@
 {
     "eslint.workingDirectories": [{ "mode": "auto" }],
+    "prettier.prettierPath": "c:\\Users\\Joel Kerfoot\\Projects\\cook-book-v2\\graphql\\node_modules\\prettier\\index.js", 
 }
