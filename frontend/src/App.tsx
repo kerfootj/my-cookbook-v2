@@ -1,8 +1,7 @@
 import React from 'react';
-import { Recipe } from './Recipe';
+import Recipe from './Recipe';
+import recipe from './data';
 
-export function App() {
-  return (
-    <Recipe />
-  );
+export default function App() {
+    return <Recipe recipe={recipe} />;
 }
