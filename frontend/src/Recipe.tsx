@@ -15,7 +15,7 @@ interface ListProps {
 const RecipeContainer = styled.div`
     padding: 0px;
     margin: 20px auto;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.6em;
     color: #2c2c30;
     max-width: 800px;
@@ -43,13 +43,13 @@ const Image = styled.img`
 const Title = styled.h2`
     font-family: 'Raleway', Arial, helvetica, sans-serif;
     margin: 0px 0 8px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 36px;
 `;
 
 const Subtitle = styled.div`
     font-family: 'Raleway', Arial, helvetica, sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     margin: 20px 0 10px;
     font-size: 28px;
 `;
@@ -178,11 +178,11 @@ function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
         const formatted_time: string[] = [];
 
         if (hrs) {
-            formatted_time.push(`${hrs} hrs`);
+            formatted_time.push(`${hrs} hr${hrs > 1 ? 's' : ''}`);
         }
 
         if (mins) {
-            formatted_time.push(`${mins} mins`);
+            formatted_time.push(`${mins} min${mins > 1 ? 's' : ''}`);
         }
 
         return formatted_time.join(' ');
