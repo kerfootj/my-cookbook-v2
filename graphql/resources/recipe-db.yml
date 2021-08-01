@@ -1,0 +1,21 @@
+Resources:
+    RecipeDB:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            TableName: ${self:custom.RecipeDB}
+            AttributeDefinitions:
+                - AttributeName: id
+                  AttributeType: S
+                - AttributeName: name
+                  AttributeType: S
+
+            KeySchema:
+                - AttributeName: id
+                  KeyType: HASH
+                - AttributeName: name
+                  KeyType: RANGE
+
+            # Set the capacity based on the stage
+            ProvisionedThroughput:
+                ReadCapacityUnits: ${self:custom.tableThroughput}
+                WriteCapacityUnits: ${self:custom.tableThroughput}
