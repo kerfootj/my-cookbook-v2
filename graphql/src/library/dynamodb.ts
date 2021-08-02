@@ -1,24 +1,99 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import AWS from 'aws-sdk';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { customAlphabet } from 'nanoid';
 
-const client = new AWS.DynamoDB.DocumentClient();
+/** Globals */
+const SOURCE = 'DynamoDB';
+
+// create nanid with custom alphabet and size
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 12);
+
+// create a DynamoDB document client
+const client = new DocumentClient();
 
 export const dynamoDB = {
-    get: (params: AWS.DynamoDB.DocumentClient.GetItemInput) =>
-        client.get(params).promise(),
+    // queries
+    get,
 
-    put: (params: AWS.DynamoDB.DocumentClient.PutItemInput) =>
-        client.put(params).promise(),
-
-    query: (params: AWS.DynamoDB.DocumentClient.QueryInput) =>
+    query: (params: DocumentClient.QueryInput) =>
         client.query(params).promise(),
 
-    update: (params: AWS.DynamoDB.DocumentClient.UpdateItemInput) =>
+    scan,
+
+    // mutations
+    put,
+
+    update: (params: DocumentClient.UpdateItemInput) =>
         client.update(params).promise(),
 
-    delete: (params: AWS.DynamoDB.DocumentClient.DeleteItemInput) =>
+    delete: (params: DocumentClient.DeleteItemInput) =>
         client.delete(params).promise(),
-
-    scan: (params: AWS.DynamoDB.DocumentClient.ScanInput) =>
-        client.scan(params).promise(),
 };
+
+async function put<Entity>(
+    params: DocumentClient.PutItemInput,
+): Promise<Entity> {
+    const now = new Date();
+
+    // set id, created_at, and updated_at
+    const entity = {
+        ...params.Item,
+        id: nanoid(),
+        created_at: now.toISOString(),
+        updated_at: now.toISOString(),
+    };
+
+    await client
+        .put({
+            ...params,
+            Item: entity,
+        })
+        .promise();
+
+    return entity as unknown as Entity;
+}
+
+async function get<Entity>(
+    params: DocumentClient.GetItemInput,
+): Promise<Entity> {
+    const response = await client.get(params).promise();
+
+    if (!response.Item) {
+        throw new Error(
+            `${SOURCE} - failed to get item: ${params.Key.id} from ${params.TableName}`,
+        );
+    }
+
+    const entity = {
+        ...response.Item,
+
+        // Convert ISO string to date object
+        created_at: new Date(response.Item.created_at),
+        updated_at: new Date(response.Item.updatedf_at),
+    };
+
+    return entity as unknown as Entity;
+}
+
+async function scan<Entity>(
+    params: DocumentClient.ScanInput,
+): Promise<{ entities: Entity[]; cursor: string | null }> {
+    const response = await client.scan(params).promise();
+
+    if (!response.Items) {
+        throw new Error(
+            `${SOURCE} - failed to scan items from ${params.TableName}`,
+        );
+    }
+
+    const entities = response.Items.map((item) => ({
+        ...item,
+        created_at: new Date(item.created_at),
+        updated_at: new Date(item.updated_at),
+    })) as unknown as Entity[];
+
+    return {
+        entities,
+        cursor: response.LastEvaluatedKey ? response.LastEvaluatedKey.id : null,
+    };
+}
