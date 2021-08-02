@@ -8,6 +8,10 @@ deploy_service: &DEPLOY_SERVICE
       - node_modules
       - ${SERVICE_PATH}/node_modules
 
+  stages:
+    - name: script
+      if: branch = master
+
   install:
     - npm install -g serverless
     - travis_retry npm install -s
@@ -19,8 +23,6 @@ deploy_service: &DEPLOY_SERVICE
     - cd ${SERVICE_PATH}
     - serverless deploy -s prod
     - cd -
-    on:
-      branch: master
 
 jobs:
   include:
