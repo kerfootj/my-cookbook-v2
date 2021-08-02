@@ -14,6 +14,9 @@
 */.serverless
 */.webpack
 
+# graphql
+*/schema.gql
+
 # misc
 .DS_Store
 */.env
