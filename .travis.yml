@@ -17,7 +17,7 @@ deploy_service: &DEPLOY_SERVICE
 
   script:
     - cd ${SERVICE_PATH}
-    - serverless deploy -s ${TRAVIS_BRANCH}
+    - serverless deploy -s prod
     - cd -
     on:
       branch: master
