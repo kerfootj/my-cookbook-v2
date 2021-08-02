@@ -1,5 +1,8 @@
+import { useQuery } from '@apollo/client';
 import React, { ReactElement } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { recipeQuery } from './queries/recipe';
 import { Recipe } from './types/recipe.type';
 
 /** Interfaces */
@@ -114,8 +117,16 @@ const ListItem = styled.li`
 /**
  * Recipe Page Component
  */
-export default ({ recipe }: { recipe: Recipe }): ReactElement => {
-    const { name, description, photo_url, servings, notes } = recipe;
+export default (props: {}): ReactElement => {
+    const { id } = useParams<{ id: string }>();
+    const { loading, error, data } = useQuery(recipeQuery, {
+        variables: { id },
+    });
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
+
+    const { name, description, photo_url, servings, notes } = data.recipe;
 
     return (
         <RecipeContainer>
@@ -133,7 +144,7 @@ export default ({ recipe }: { recipe: Recipe }): ReactElement => {
                 <span>servings: </span>
                 <span>{servings}</span>
 
-                <RecipeTime recipe={recipe} />
+                <RecipeTime recipe={data.recipe} />
             </MetaDataContainer>
 
             <Spacer multiplier={2} />
@@ -144,14 +155,14 @@ export default ({ recipe }: { recipe: Recipe }): ReactElement => {
 
             <ContentContainer>
                 <Subtitle>Ingredients</Subtitle>
-                <Ingredients recipe={recipe} />
+                <Ingredients recipe={data.recipe} />
             </ContentContainer>
 
             <Spacer />
 
             <ContentContainer>
                 <Subtitle>Instructions</Subtitle>
-                <Instructions recipe={recipe} />
+                <Instructions recipe={data.recipe} />
             </ContentContainer>
 
             {notes && (
@@ -217,31 +228,14 @@ function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
     );
 }
 
-function Ingredients({ recipe }: { recipe: Recipe }): ReactElement | null {
-    const { ingredients } = recipe;
-
-    switch (ingredients.kind) {
-        case 'simple':
-            return IngredientsList({
-                ingredients: ingredients.ingredients,
-                title: null,
-            });
-
-        case 'detailed':
-            return (
-                <>
-                    {ingredients.parts.map((part) =>
-                        IngredientsList({
-                            ingredients: part.ingredients,
-                            title: part.title,
-                        }),
-                    )}
-                </>
-            );
-
-        default:
-            return null;
-    }
+function Ingredients({ recipe }: { recipe: Recipe }): ReactElement {
+    return (
+        <>
+            {recipe.ingredients.map(({ ingredients, title }) =>
+                IngredientsList({ ingredients, title }),
+            )}
+        </>
+    );
 }
 
 function IngredientsList({
@@ -250,7 +244,7 @@ function IngredientsList({
 }: {
     ingredients: string[];
     title: string | null;
-}) {
+}): ReactElement {
     return (
         <IngredientsGroup>
             {title && <Caption>{title}</Caption>}

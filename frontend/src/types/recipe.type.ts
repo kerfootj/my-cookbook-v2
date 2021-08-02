@@ -12,12 +12,13 @@ export interface Recipe {
     time_chill?: number; // mins
     time_total: number; // mins
 
-    ingredients: Ingredients;
+    ingredients: Ingredients[];
     instructions: string[];
 
     notes?: string;
 }
 
-export type Ingredients =
-    | { kind: 'simple'; ingredients: string[] }
-    | { kind: 'detailed'; parts: { title: string; ingredients: string[] }[] };
+interface Ingredients {
+    title: string;
+    ingredients: string[];
+}
