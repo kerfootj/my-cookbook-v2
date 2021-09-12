@@ -5,7 +5,7 @@ import { resolvers } from './resolvers';
 
 const schema = buildSchemaSync({
     resolvers,
-    emitSchemaFile: true,
+    emitSchemaFile: false,
 });
 
 const apollo_server = new ApolloServer({
