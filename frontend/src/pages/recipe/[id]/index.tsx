@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { Paper, Typography } from '@material-ui/core';
 import { useRouter } from 'next/dist/client/router';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
@@ -15,12 +16,11 @@ interface ListProps {
 }
 
 /** Styled Components */
-const RecipeContainer = styled.div`
-    padding: 0px;
-    margin: 20px auto;
+const RecipeContainer = styled(Paper)`
+    padding: 24px;
+    margin: 16px auto;
     font-size: 15px;
     line-height: 1.6em;
-    color: #2c2c30;
     max-width: 800px;
 `;
 
@@ -137,7 +137,7 @@ const RecipePage = (): ReactElement => {
                 </ImageContainer>
             )}
 
-            <Title>{name}</Title>
+            <Typography variant='h2'>{name}</Typography>
             <Spacer />
 
             <MetaDataContainer>
@@ -213,14 +213,14 @@ function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
                     <span>cook time: </span>
                     <span>{formatTime(time_cook)}</span>
                 </Time>
-            )}
+            ) || undefined}
 
             {time_chill && (
                 <Time>
                     <span>chilling time: </span>
                     <span>{formatTime(time_chill)}</span>
                 </Time>
-            )}
+            ) || undefined}
 
             <Time>
                 <span>total time: </span>
