@@ -35,8 +35,7 @@ export const recipesQuery = gql`
                 created_at
                 name
                 description
-                servings
-                time_total
+                photo_url
             }
         }
     }

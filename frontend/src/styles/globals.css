@@ -2,10 +2,6 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:regular,bold&subset=latin,latin-ext');
 
 * {
-    font-family: 'Bitter', Georgia, sans-serif;
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0px !important;
+	font-family: 'Bitter', Georgia, sans-serif;
+	box-sizing: border-box;
 }

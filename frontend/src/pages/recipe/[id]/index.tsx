@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
-import React, { ReactElement } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/dist/client/router';
+import { ReactElement } from 'react';
 import styled from 'styled-components';
-import { recipeQuery } from './queries/recipe';
-import { Recipe } from './types/recipe.type';
+import { recipeQuery } from '../../../queries/recipe';
+import { Recipe } from '../../../types/recipe.type';
 
 /** Interfaces */
 interface SpacerProps {
@@ -74,7 +74,7 @@ const MetaDataContainer = styled.div`
     letter-spacing: 0.1em;
 `;
 
-const TimesContainter = styled.div`
+const TimesContainer = styled.div`
     margin-left: 1.4em;
     display: inline;
 `;
@@ -112,13 +112,13 @@ const ListItem = styled.li`
     list-style-position: outside;
 `;
 
-/* eslint-disable @typescript-eslint/no-use-before-define */
-
 /**
  * Recipe Page Component
  */
-export default (props: {}): ReactElement => {
-    const { id } = useParams<{ id: string }>();
+const RecipePage = (): ReactElement => {
+    const router = useRouter();
+    const { id } = router.query;
+
     const { loading, error, data } = useQuery(recipeQuery, {
         variables: { id },
     });
@@ -132,7 +132,7 @@ export default (props: {}): ReactElement => {
         <RecipeContainer>
             {photo_url && (
                 <ImageContainer>
-                    <Image src={photo_url} />
+                    <Image src={photo_url} alt={name} />
                     <Spacer />
                 </ImageContainer>
             )}
@@ -179,6 +179,8 @@ export default (props: {}): ReactElement => {
     );
 };
 
+export default RecipePage;
+
 function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
     const { time_prep, time_total, time_chill, time_cook } = recipe;
 
@@ -200,7 +202,7 @@ function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
     };
 
     return (
-        <TimesContainter>
+        <TimesContainer>
             <Time>
                 <span>prep time: </span>
                 <span>{formatTime(time_prep)}</span>
@@ -224,7 +226,7 @@ function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
                 <span>total time: </span>
                 <span>{formatTime(time_total)}</span>
             </Time>
-        </TimesContainter>
+        </TimesContainer>
     );
 }
 
@@ -262,8 +264,8 @@ function Instructions({ recipe }: { recipe: Recipe }): ReactElement {
 
     return (
         <List type="decimal">
-            {instructions.map((instruction) => (
-                <ListItem>{instruction}</ListItem>
+            {instructions.map((instruction, index) => (
+                <ListItem key={`step-${index + 1}`} >{instruction}</ListItem>
             ))}
         </List>
     );

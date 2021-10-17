@@ -1,0 +1,4 @@
+cookbook:
+  component: '@sls-next/serverless-component@3.4.0'
+  inputs:
+    domain: 'wtf2cook.ca'

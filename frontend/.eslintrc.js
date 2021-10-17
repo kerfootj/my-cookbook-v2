@@ -4,9 +4,11 @@ module.exports = {
         es2021: true,
     },
     extends: [
-        'plugin:react/recommended',
         'airbnb',
+        'next/core-web-vitals',
         'plugin:prettier/recommended',
+        'plugin:react/jsx-runtime',
+        'plugin:react/recommended',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -27,11 +29,13 @@ module.exports = {
     },
     rules: {
         '@typescript-eslint/no-use-before-define': ['error', {}],
-        camelcase: 'off',
         'import/extensions': 'off',
         'import/prefer-default-export': 'off',
-        'no-use-before-define': 'off',
         'no-unused-vars': 'warn',
+        'no-use-before-define': 'off',
         'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],
+        'react/react-in-jsx-scope': 'off',
+        camelcase: 'off',
     },
+    ignorePatterns: ['next.config.*'],
 };
