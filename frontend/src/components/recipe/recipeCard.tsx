@@ -30,7 +30,12 @@ export function RecipeCard({ recipe }: { recipe: Recipe }): ReactElement {
     const { id, name, description, photo_url } = recipe;
     return (
         <StyledCard>
-            <CardActionArea href={`/recipe/${id}`}>
+            <CardActionArea
+                href={`/recipe/${id}/${name
+                    .toLowerCase()
+                    .split(' ')
+                    .join('-')}`}
+            >
                 <CardPhoto image={photo_url} title={name} />
                 <CardContent>
                     <CardTitle variant="h6" gutterBottom>
