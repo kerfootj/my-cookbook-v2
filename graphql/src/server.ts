@@ -5,7 +5,7 @@ import { resolvers } from './resolvers';
 
 const schema = buildSchemaSync({
     resolvers,
-    emitSchemaFile: true,
+    emitSchemaFile: process.env.NODE_ENV == 'dev',
 });
 
 const apollo_server = new ApolloServer({
