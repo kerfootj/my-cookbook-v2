@@ -2,21 +2,20 @@ import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql';
 import { dynamoDB } from '../library/dynamodb';
 import { Recipe, RecipeInput, RecipesResponse } from '../schema/recipe';
 
+/** Globals */
 const RECIPE_TABLE = process.env.RecipeDB || 'dev-recipes';
 
-@Resolver((of) => Recipe)
+@Resolver()
 export class RecipeResolver {
-    @Query((returns) => Recipe)
-    async recipe(@Arg('id', (type) => ID) id: string): Promise<Recipe> {
-        console.log(id);
-
+    @Query(() => Recipe)
+    async recipe(@Arg('id', () => ID) id: string): Promise<Recipe> {
         return await dynamoDB.get<Recipe>({
             TableName: RECIPE_TABLE,
             Key: { id },
         });
     }
 
-    @Query((returns) => RecipesResponse)
+    @Query(() => RecipesResponse)
     async recipes(): Promise<{
         recipes: Recipe[];
         cursor: string | null;
@@ -31,7 +30,7 @@ export class RecipeResolver {
         };
     }
 
-    @Mutation((returns) => Recipe)
+    @Mutation(() => Recipe)
     async createRecipe(@Arg('input') input: RecipeInput): Promise<Recipe> {
         return await dynamoDB.put<Recipe>({
             TableName: RECIPE_TABLE,

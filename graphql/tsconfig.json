@@ -12,11 +12,11 @@
         "rootDir": "./",
         "target": "es6",
         "removeComments": true,
-        "skipLibCheck": true, 
+        "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
         "strictPropertyInitialization": false
     },
     "exclude": ["node_modules", "src/**/*.test.ts"],
-    "include": ["src/**/*.ts"]
+    "include": ["src/**/*.ts", "./custom.d.ts"]
 }

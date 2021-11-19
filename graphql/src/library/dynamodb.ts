@@ -69,7 +69,7 @@ async function get<Entity>(
 
         // Convert ISO string to date object
         created_at: new Date(response.Item.created_at),
-        updated_at: new Date(response.Item.updatedf_at),
+        updated_at: new Date(response.Item.updated_at),
     };
 
     return entity as unknown as Entity;

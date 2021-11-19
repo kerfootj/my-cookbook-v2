@@ -5,16 +5,13 @@ import { resolvers } from './resolvers';
 
 const schema = buildSchemaSync({
     resolvers,
-    emitSchemaFile: false,
+    emitSchemaFile: true,
 });
 
 const apollo_server = new ApolloServer({
     schema,
+    // add request and response to graphQL context
+    context: ({ express }) => ({ req: express.req, res: express.res }),
 });
 
-export const graphql_handler = apollo_server.createHandler({
-    cors: {
-        origin: '*',
-        credentials: true,
-    },
-});
+export const graphql_handler = apollo_server.createHandler();

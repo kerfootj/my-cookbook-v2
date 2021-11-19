@@ -6,6 +6,7 @@ provider:
     lambdaHashingVersion: 20201221
     environment:
         RecipeDB: ${self:custom.RecipeDB}
+        UserDB: ${self:custom.UserDB}
 
     iam:
         role:
@@ -25,6 +26,7 @@ provider:
                       - dynamodb:ListStream
                   Resource:
                       - 'Fn::GetAtt': [RecipeDB, Arn]
+                      - 'Fn::GetAtt': [UserDB, Arn]
 functions:
     graphql:
         handler: src/server.graphql_handler
@@ -48,6 +50,7 @@ custom:
     stage: ${opt:stage, self:provider.stage}
     region: ${opt:region, self:provider.region}
     RecipeDB: ${self:custom.stage}-recipes
+    UserDB: ${self:custom.stage}-users
     tableThroughputs:
         prod: 1
         default: 1
@@ -55,3 +58,4 @@ custom:
 
 resources:
     - ${file(resources/recipe-db.yml)}
+    - ${file(resources/user-db.yml)}
