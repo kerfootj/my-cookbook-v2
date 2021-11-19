@@ -5,11 +5,12 @@ import { resolvers } from './resolvers';
 
 const schema = buildSchemaSync({
     resolvers,
-    emitSchemaFile: process.env.NODE_ENV == 'dev',
+    emitSchemaFile: process.env.NODE_ENV === 'dev',
 });
 
 const apollo_server = new ApolloServer({
     schema,
+    introspection: process.env.NODE_ENV !== 'production',
     // add request and response to graphQL context
     context: ({ express }) => ({ req: express.req, res: express.res }),
 });
