@@ -1,8 +1,9 @@
 import { Field, ObjectType, ID, InputType } from 'type-graphql';
+import { withDefaults } from './common';
 
 @ObjectType()
-export class User {
-    @Field((type) => ID)
+export class User extends withDefaults() {
+    @Field(() => ID)
     id: string;
 
     @Field()
@@ -10,6 +11,9 @@ export class User {
 
     @Field()
     email: string;
+
+    @Field(() => String, { nullable: true })
+    picture: string | null;
 }
 
 @InputType()
