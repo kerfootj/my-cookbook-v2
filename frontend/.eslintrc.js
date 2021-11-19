@@ -34,6 +34,7 @@ module.exports = {
         ],
         'import/extensions': 'off',
         'import/prefer-default-export': 'off',
+        'no-nested-ternary': 'off',
         'no-unused-vars': 'warn',
         'no-use-before-define': 'off',
         'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],

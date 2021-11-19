@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, MetaProps } from './meta';
 
+/** Types */
 interface PageComponentProps {
     meta: MetaProps;
 }

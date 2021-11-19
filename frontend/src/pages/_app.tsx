@@ -1,12 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import {
+    ApolloClient,
+    ApolloProvider,
+    createHttpLink,
+    InMemoryCache,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import NavBar from '../components/navBar';
 
 const theme = createTheme({
     palette: {
-        type: 'dark',
+        mode: 'dark',
     },
     typography: {
         fontFamily: ['Raleway', 'Arial', 'helvetica', 'sans-serif'].join(),
@@ -16,11 +24,28 @@ const theme = createTheme({
     },
 });
 
-const client = new ApolloClient({
+const base_link = createHttpLink({
     uri:
         process.env.NODE_ENV === 'production'
             ? 'https://api.wtf2cook.ca/graphql'
             : 'http://localhost:3000/dev/graphql',
+    credentials: 'include',
+});
+
+const auth_link = setContext((_, { headers }) => {
+    // get the authentication token from local storage if it exists
+    const token = localStorage.getItem('token');
+
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    };
+});
+
+const client = new ApolloClient({
+    link: auth_link.concat(base_link),
     cache: new InMemoryCache(),
 });
 
@@ -29,6 +54,7 @@ function App({ Component, pageProps }: AppProps) {
         <ApolloProvider client={client}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
+                <NavBar />
                 <Component {...pageProps} />
             </ThemeProvider>
         </ApolloProvider>

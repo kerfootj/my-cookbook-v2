@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import { useRouter } from 'next/dist/client/router';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
@@ -38,8 +38,8 @@ const ImageContainer = styled.div`
 `;
 
 const Image = styled.img`
-    max-width: 180px;
-    max-width: 180px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
 `;
 

@@ -4,7 +4,7 @@ import {
     CardContent,
     CardMedia,
     Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import TextTruncate from 'react-text-truncate';
@@ -46,6 +46,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }): ReactElement {
                             line={2}
                             truncateText=" …"
                             text={description}
+                            element="span"
                         />
                     </CardDescription>
                 </CardContent>
