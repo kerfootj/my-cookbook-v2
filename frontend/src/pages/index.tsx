@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Grid } from '@mui/material';
 import { ReactElement } from 'react';
+import Loading from '../components/loading';
 import { PageComponent } from '../components/page';
 import { RecipeCard } from '../components/recipe/recipeCard';
 import { recipesQuery } from '../queries/recipe';
@@ -10,7 +11,7 @@ const Home = (): ReactElement => {
     const { loading, error, data } =
         useQuery<{ recipes: { recipes: Recipe[] } }>(recipesQuery);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <Loading />;
     if (error) return <p>Error :(</p>;
 
     const recipes = data?.recipes?.recipes || [];

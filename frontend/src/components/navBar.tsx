@@ -21,10 +21,7 @@ const Brand = styled.div`
     cursor: pointer;
 `;
 
-const Offset = styled.div`
-    height: 64px;
-    margin-bottom: 8px;
-`;
+const Filler = styled(Toolbar)``;
 
 const NavBar: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -101,8 +98,8 @@ const NavBar: React.FC = () => {
                         )}
                     </Toolbar>
                 </AppBar>
+                <Filler style={{ marginBottom: 8 }} />
             </Box>
-            <Offset />
         </>
     );
 };
