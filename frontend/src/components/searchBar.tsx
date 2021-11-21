@@ -1,8 +1,8 @@
 import { Divider, IconButton, InputBase, Paper } from '@mui/material';
-import { AddBox, Search } from '@mui/icons-material';
-import Link from 'next/link';
+import { Search } from '@mui/icons-material';
 import React from 'react';
 import { User } from '../types/user.type';
+import { NewRecipeModal } from './recipe/newRecipeModal';
 
 /** Types */
 interface SearchBarProps {
@@ -35,11 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ user }) => {
                         sx={{ height: 28, m: 0.5 }}
                         orientation="vertical"
                     />
-                    <IconButton sx={{ p: '10px' }} aria-label="new recipes">
-                        <Link href="/new" passHref>
-                            <AddBox />
-                        </Link>
-                    </IconButton>
+                    <NewRecipeModal />
                 </>
             )}
         </Paper>

@@ -18,7 +18,7 @@ export interface Recipe {
     notes?: string;
 }
 
-interface Ingredients {
+export interface Ingredients {
     title: string;
     ingredients: string[];
 }

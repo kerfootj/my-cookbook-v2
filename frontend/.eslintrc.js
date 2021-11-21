@@ -9,6 +9,8 @@ module.exports = {
         'plugin:prettier/recommended',
         'plugin:react/jsx-runtime',
         'plugin:react/recommended',
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -35,7 +37,7 @@ module.exports = {
         'import/extensions': 'off',
         'import/prefer-default-export': 'off',
         'no-nested-ternary': 'off',
-        'no-unused-vars': 'warn',
+        'no-unused-vars': 'off',
         'no-use-before-define': 'off',
         'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],
         'react/react-in-jsx-scope': 'off',

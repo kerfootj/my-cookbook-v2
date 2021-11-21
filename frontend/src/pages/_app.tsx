@@ -29,7 +29,6 @@ const base_link = createHttpLink({
         process.env.NODE_ENV === 'production'
             ? 'https://api.wtf2cook.ca/graphql'
             : 'http://localhost:3000/dev/graphql',
-    credentials: 'include',
 });
 
 const auth_link = setContext((_, { headers }) => {
