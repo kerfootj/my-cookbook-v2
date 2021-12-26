@@ -32,6 +32,7 @@ interface Step2Props {
 }
 
 interface Step3Props {
+    instructions: Recipe['instructions'];
     setInstructions: (instructions: Recipe['instructions']) => void;
 }
 
@@ -124,7 +125,10 @@ export const NewRecipeModal: React.FC = () => {
                             />
                         )}
                         {step === 3 && (
-                            <Step3 setInstructions={setInstructions} />
+                            <Step3
+                                instructions={instructions}
+                                setInstructions={setInstructions}
+                            />
                         )}
                     </Box>
                     <Divider />
@@ -291,7 +295,7 @@ function Step2(props: Step2Props): ReactElement {
  * Instructions
  */
 function Step3(props: Step3Props): ReactElement {
-    const { setInstructions } = props;
+    const { instructions, setInstructions } = props;
 
     return (
         <TextField
@@ -301,6 +305,7 @@ function Step3(props: Step3Props): ReactElement {
             margin="normal"
             multiline
             rows={12}
+            value={instructions.join('\n')}
             onChange={(event) =>
                 setInstructions(event.target.value.split(/\r?\n/))
             }
