@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { Grid } from '@mui/material';
 import { ReactElement } from 'react';
-import Loading from '../components/loading';
-import { PageComponent } from '../components/page';
-import { RecipeCard } from '../components/recipe/recipeCard';
+import Loading from '../components/Loading';
+import { PageComponent } from '../components/Page';
+import { RecipeCard } from '../components/recipe/RecipeCard';
 import { recipesQuery } from '../queries/recipe';
 import { Recipe } from '../types/recipe.type';
 

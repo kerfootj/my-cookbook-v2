@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta, MetaProps } from './meta';
+import { Meta, MetaProps } from './Meta';
 
 /** Types */
 interface PageComponentProps {

@@ -9,8 +9,8 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { loginWithGoogle } from '../mutations/auth';
 import { User } from '../types/user.type';
-import { UserMenu } from './user/userMenu';
-import SearchBar from './searchBar';
+import { UserMenu } from './user/UserMenu';
+import SearchBar from './SearchBar';
 
 /** Globals */
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string;

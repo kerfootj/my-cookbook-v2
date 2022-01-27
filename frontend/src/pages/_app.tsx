@@ -10,7 +10,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import NavBar from '../components/navBar';
+import NavBar from '../components/NavBar';
 
 const theme = createTheme({
     palette: {

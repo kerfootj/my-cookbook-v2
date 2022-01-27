@@ -2,7 +2,7 @@ import { Divider, IconButton, InputBase, Paper } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import React from 'react';
 import { User } from '../types/user.type';
-import { NewRecipeModal } from './recipe/newRecipeModal';
+import { NewRecipeModal } from './recipe/NewRecipeModal';
 
 /** Types */
 interface SearchBarProps {

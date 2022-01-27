@@ -3,6 +3,8 @@ import { Paper } from '@mui/material';
 import { useRouter } from 'next/dist/client/router';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
+import Loading from '../../../../components/Loading';
+import { RecipeDetails } from '../../../../components/recipe/RecipeDetails';
 import { recipeQuery } from '../../../../queries/recipe';
 import { Recipe } from '../../../../types/recipe.type';
 
@@ -123,152 +125,10 @@ const RecipePage = (): ReactElement => {
         variables: { id },
     });
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <Loading />;
     if (error) return <p>Error :(</p>;
 
-    const { name, description, photo_url, servings, notes } = data.recipe;
-
-    return (
-        <RecipeContainer>
-            {photo_url && (
-                <ImageContainer>
-                    <Image src={photo_url} alt={name} />
-                    <Spacer />
-                </ImageContainer>
-            )}
-
-            <Title>{name}</Title>
-            <Spacer />
-
-            <MetaDataContainer>
-                <span>servings: </span>
-                <span>{servings}</span>
-
-                <RecipeTime recipe={data.recipe} />
-            </MetaDataContainer>
-
-            <Spacer multiplier={2} />
-
-            {description && <Description>{description}</Description>}
-
-            <Spacer />
-
-            <ContentContainer>
-                <Subtitle>Ingredients</Subtitle>
-                <Ingredients recipe={data.recipe} />
-            </ContentContainer>
-
-            <Spacer />
-
-            <ContentContainer>
-                <Subtitle>Instructions</Subtitle>
-                <Instructions recipe={data.recipe} />
-            </ContentContainer>
-
-            {notes && (
-                <>
-                    <Spacer />
-
-                    <ContentContainer>
-                        <Subtitle>Notes</Subtitle>
-                        {notes}
-                    </ContentContainer>
-                </>
-            )}
-        </RecipeContainer>
-    );
+    return <RecipeDetails recipe={data.recipe} />;
 };
 
 export default RecipePage;
-
-function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
-    const { time_prep, time_total, time_chill, time_cook } = recipe;
-
-    const formatTime = (time: number): string => {
-        const hrs = Math.floor(time / 60);
-        const mins = time % 60;
-
-        const formatted_time: string[] = [];
-
-        if (hrs) {
-            formatted_time.push(`${hrs} hr${hrs > 1 ? 's' : ''}`);
-        }
-
-        if (mins) {
-            formatted_time.push(`${mins} min${mins > 1 ? 's' : ''}`);
-        }
-
-        return formatted_time.join(' ');
-    };
-
-    return (
-        <TimesContainer>
-            <Time>
-                <span>prep time: </span>
-                <span>{formatTime(time_prep)}</span>
-            </Time>
-
-            {(time_cook && (
-                <Time>
-                    <span>cook time: </span>
-                    <span>{formatTime(time_cook)}</span>
-                </Time>
-            )) ||
-                undefined}
-
-            {(time_chill && (
-                <Time>
-                    <span>chilling time: </span>
-                    <span>{formatTime(time_chill)}</span>
-                </Time>
-            )) ||
-                undefined}
-
-            <Time>
-                <span>total time: </span>
-                <span>{formatTime(time_total)}</span>
-            </Time>
-        </TimesContainer>
-    );
-}
-
-function Ingredients({ recipe }: { recipe: Recipe }): ReactElement {
-    return (
-        <>
-            {recipe.ingredients.map(({ ingredients, title }) =>
-                IngredientsList({ ingredients, title }),
-            )}
-        </>
-    );
-}
-
-function IngredientsList({
-    ingredients,
-    title,
-}: {
-    ingredients: string[];
-    title: string | null;
-}): ReactElement {
-    return (
-        <IngredientsGroup>
-            {title && <Caption>{title}</Caption>}
-            <List type="disc">
-                {ingredients.map((ingredient) => (
-                    <ListItem key={ingredient}>{ingredient}</ListItem>
-                ))}
-            </List>
-        </IngredientsGroup>
-    );
-}
-
-function Instructions({ recipe }: { recipe: Recipe }): ReactElement {
-    const { instructions } = recipe;
-
-    return (
-        <List type="decimal">
-            {instructions.map((instruction, index) => (
-                <ListItem key={`step-${index + 1}`}>{instruction}</ListItem>
-            ))}
-        </List>
-    );
-}
