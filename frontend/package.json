@@ -13,11 +13,13 @@
         "@mui/icons-material": "^5.1.1",
         "@mui/material": "^5.1.1",
         "@mui/system": "^5.1.1",
+        "browser-image-compression": "^1.0.17",
         "express": "^4.17.1",
         "graphql": "^15.6.1",
         "next": "11.1.2",
         "react": "17.0.2",
         "react-dom": "17.0.2",
+        "react-dropzone": "^11.4.2",
         "react-google-login": "^5.2.2",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",
@@ -48,6 +50,6 @@
         "serverless-domain-manager": "^5.1.5",
         "serverless-offline": "^8.2.0",
         "serverless-plugin-typescript": "^2.1.0",
-        "typescript": "4.4.4"
+        "typescript": "4.5.5"
     }
 }
