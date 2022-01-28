@@ -9,22 +9,4 @@ export class UserResolver {
     async getUser(@Arg('id') id: string): Promise<User> {
         return await this.users[id];
     }
-
-    @Mutation(() => User)
-    async createUser(@Arg('input') input: UserInput): Promise<User> {
-        const { name, email } = input;
-
-        const id = Math.random().toString();
-
-        const user = {
-            id,
-            name,
-            email,
-            picture: null,
-        };
-
-        this.users[id] = user;
-
-        return user;
-    }
 }

@@ -1,53 +1,52 @@
+import { ApolloError } from 'apollo-server-errors';
 import { LoginTicket, OAuth2Client } from 'google-auth-library';
-import { Arg, Mutation, Resolver } from 'type-graphql';
+import { Arg, Ctx, Mutation, Resolver } from 'type-graphql';
+import jwt from 'jsonwebtoken';
+import { USER_TABLE } from '../globals';
 import { dynamoDB } from '../library/dynamodb';
 import { LoginWithGoogleInput, LoginWithGoogleResponse } from '../schema/auth';
 import { User } from '../schema/user';
+import { Context } from '../types/graphql.types';
 
 /** Globals */
-const USER_TABLE = process.env.UserDB || 'dev-users';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID as string;
+const WTF_TOKEN_KEY = process.env.WTF_TOKEN_KEY as string;
 
 @Resolver()
 export class LoginWithGoogleResolver {
     @Mutation(() => LoginWithGoogleResponse)
     async loginWithGoogle(
         @Arg('input') input: LoginWithGoogleInput,
+        @Ctx() context: Context,
     ): Promise<LoginWithGoogleResponse> {
+        // check if they are already logged in
+        if (context.user && context.token) {
+            return {
+                user: context.user,
+                token: context.token,
+            };
+        }
+
+        // check google id token
         const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-        let jwt: LoginTicket;
+        let ticket: LoginTicket;
         try {
-            jwt = await client.verifyIdToken({
+            ticket = await client.verifyIdToken({
                 idToken: input.id_token,
                 audience: GOOGLE_CLIENT_ID,
             });
         } catch (error) {
-            return {
-                token: 'failed to verify id token',
-                user: {
-                    email: '',
-                    id: '',
-                    name: '',
-                    picture: null,
-                },
-            };
+            throw new ApolloError('failed to verify token');
         }
 
-        const { email, name, picture } = jwt.getPayload() || {};
+        const { email, name, picture } = ticket.getPayload() || {};
 
         if (!email || !name) {
-            return {
-                token: 'missing email or name',
-                user: {
-                    email: `${email}`,
-                    id: '',
-                    name: `${name}`,
-                    picture: null,
-                },
-            };
+            throw new ApolloError('email or name is missing from auth token');
         }
 
+        // create or update the user
         const user = await dynamoDB.put<User>({
             TableName: USER_TABLE,
             Item: {
@@ -57,8 +56,14 @@ export class LoginWithGoogleResolver {
             },
         });
 
+        // generate jwt for authentication
+        const token = jwt.sign(
+            { id: user.id, email, name, picture },
+            WTF_TOKEN_KEY,
+        );
+
         return {
-            token: input.id_token,
+            token,
             user,
         };
     }
