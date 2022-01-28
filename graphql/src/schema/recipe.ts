@@ -1,4 +1,4 @@
-import { Field, ObjectType, InputType } from 'type-graphql';
+import { Field, ObjectType, InputType, ID } from 'type-graphql';
 import { withDefaults } from './common';
 
 @ObjectType({ isAbstract: true })
@@ -43,6 +43,9 @@ class RecipeBase {
 
     @Field((type) => String, { nullable: true })
     notes: string | null;
+
+    @Field(() => ID)
+    user_id: string;
 }
 @ObjectType()
 export class Recipe extends withDefaults(RecipeBase) {
@@ -52,15 +55,15 @@ export class Recipe extends withDefaults(RecipeBase) {
 
 @InputType()
 class IngredientsInput {
-    @Field()
-    title: string;
+    @Field((type) => String, { nullable: true })
+    title: string | null;
 
     @Field((type) => [String])
     ingredients: string[];
 }
 
 @InputType()
-export class RecipeInput extends RecipeBase {
+export class CreateRecipeInput extends RecipeBase {
     @Field((type) => [IngredientsInput])
     ingredients: IngredientsInput[];
 }

@@ -1,9 +1,9 @@
-import { Arg, ID, Mutation, Query, Resolver } from 'type-graphql';
+import { ApolloError } from 'apollo-server-errors';
+import { Arg, Ctx, ID, Mutation, Query, Resolver } from 'type-graphql';
+import { RECIPE_TABLE } from '../globals';
 import { dynamoDB } from '../library/dynamodb';
-import { Recipe, RecipeInput, RecipesResponse } from '../schema/recipe';
-
-/** Globals */
-const RECIPE_TABLE = process.env.RecipeDB || 'dev-recipes';
+import { Recipe, CreateRecipeInput, RecipesResponse } from '../schema/recipe';
+import { Context } from '../types/graphql.types';
 
 @Resolver()
 export class RecipeResolver {
@@ -31,7 +31,17 @@ export class RecipeResolver {
     }
 
     @Mutation(() => Recipe)
-    async createRecipe(@Arg('input') input: RecipeInput): Promise<Recipe> {
+    async createRecipe(
+        @Arg('input') input: CreateRecipeInput,
+        @Ctx() context: Context,
+    ): Promise<Recipe> {
+        if (!context.user || context.user.id !== input.user_id) {
+            throw new ApolloError('Unauthorized', '401', {
+                ctx: context.user,
+                input,
+            });
+        }
+
         return await dynamoDB.put<Recipe>({
             TableName: RECIPE_TABLE,
             Item: input,
