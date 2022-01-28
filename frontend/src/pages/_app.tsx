@@ -6,11 +6,18 @@ import {
     ApolloProvider,
     createHttpLink,
     InMemoryCache,
+    useMutation,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
+import { User } from '../types/user.type';
+import { loginWithGoogle } from '../mutations/auth';
+
+/** Globals */
+const TOKEN = 'wtf2cook_token';
 
 const theme = createTheme({
     palette: {
@@ -33,7 +40,7 @@ const base_link = createHttpLink({
 
 const auth_link = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(TOKEN);
 
     return {
         headers: {
@@ -49,12 +56,65 @@ const client = new ApolloClient({
 });
 
 function App({ Component, pageProps }: AppProps) {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading_auth, setLoadingAuth] = useState(true);
+
+    // build login with google mutation
+    const [loginMutation] = useMutation<
+        { loginWithGoogle: { token: string; user: User } },
+        { input: { id_token: string } }
+    >(loginWithGoogle, {
+        client,
+        onCompleted: (result) => {
+            if (result.loginWithGoogle.token === 'failed to verify id token') {
+                setLoadingAuth(false);
+                localStorage.removeItem(TOKEN);
+
+                return;
+            }
+
+            // set token in local storage, attached to all gql requests in a `Authorization` header
+            localStorage.setItem(TOKEN, result.loginWithGoogle.token);
+
+            setLoadingAuth(false);
+            setUser(result.loginWithGoogle.user);
+        },
+        onError: () => {
+            setLoadingAuth(false);
+            localStorage.removeItem(TOKEN);
+        },
+    });
+
+    useEffect(() => {
+        const id_token = localStorage.getItem(TOKEN);
+
+        if (id_token && !user) {
+            loginMutation({ variables: { input: { id_token } } });
+        } else {
+            setLoadingAuth(false);
+        }
+    }, []);
+
+    const login = (id_token: string) => {
+        loginMutation({ variables: { input: { id_token } } });
+    };
+
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem(TOKEN);
+    };
+
     return (
         <ApolloProvider client={client}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <NavBar />
-                <Component {...pageProps} />
+                <NavBar
+                    user={user}
+                    loading_auth={loading_auth}
+                    login={login}
+                    logout={logout}
+                />
+                <Component {...pageProps} user={user} />
             </ThemeProvider>
         </ApolloProvider>
     );

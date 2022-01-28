@@ -16,6 +16,8 @@ export interface Recipe {
     instructions: string[];
 
     notes?: string;
+
+    user_id: string;
 }
 
 export interface Ingredients {

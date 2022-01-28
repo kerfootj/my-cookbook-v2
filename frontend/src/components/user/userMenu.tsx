@@ -36,6 +36,7 @@ export const UserMenu: React.FC<UserMenuProps> = (props) => {
                     sx={{ width: 32, height: 32 }}
                     imgProps={{ referrerPolicy: 'no-referrer' }}
                     onClick={handleMenu}
+                    style={{ cursor: 'pointer' }}
                 />
             ) : (
                 <IconButton onClick={handleMenu}>
