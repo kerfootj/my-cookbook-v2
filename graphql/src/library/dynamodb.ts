@@ -5,11 +5,13 @@ import { customAlphabet } from 'nanoid';
 /** Globals */
 const SOURCE = 'DynamoDB';
 
-// create nanid with custom alphabet and size
+// create nanoid with custom alphabet and size
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 12);
 
 // create a DynamoDB document client
-const client = new DocumentClient();
+const client = new DocumentClient({
+    region: 'us-west-2',
+});
 
 export const dynamoDB = {
     // queries
@@ -21,16 +23,24 @@ export const dynamoDB = {
     scan,
 
     // mutations
-    put,
-
-    update: (params: DocumentClient.UpdateItemInput) =>
-        client.update(params).promise(),
-
+    createOrUpdate,
+    create,
+    update,
     delete: (params: DocumentClient.DeleteItemInput) =>
         client.delete(params).promise(),
 };
 
-async function put<Entity>(
+async function createOrUpdate<Entity>(
+    params: DocumentClient.PutItemInput,
+): Promise<Entity> {
+    if (params.Item.id) {
+        return await update<Entity>(params);
+    }
+
+    return await create<Entity>(params);
+}
+
+async function create<Entity>(
     params: DocumentClient.PutItemInput,
 ): Promise<Entity> {
     const now = new Date();
@@ -39,8 +49,47 @@ async function put<Entity>(
     const entity = {
         ...params.Item,
         id: nanoid(),
-        created_at: now.toISOString(),
-        updated_at: now.toISOString(),
+        created_at: now,
+        updated_at: now,
+    };
+
+    return await put({
+        ...params,
+        Item: entity,
+    });
+
+    return entity as unknown as Entity;
+}
+
+async function update<Entity>(
+    params: DocumentClient.PutItemInput,
+): Promise<Entity> {
+    const now = new Date();
+
+    // set updated_at
+    const entity = {
+        ...params.Item,
+        updated_at: now,
+    };
+
+    return await put({
+        ...params,
+        Item: entity,
+    });
+
+    return entity as unknown as Entity;
+}
+
+async function put<Entity>(
+    params: DocumentClient.PutItemInput,
+): Promise<Entity> {
+    const { Item } = params;
+    // convert dates to string
+    // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html
+    const entity = {
+        ...Item,
+        created_at: Item.created_at.toISOString(),
+        updated_at: Item.updated_at.toISOString(),
     };
 
     await client
@@ -50,7 +99,7 @@ async function put<Entity>(
         })
         .promise();
 
-    return entity as unknown as Entity;
+    return Item as Entity;
 }
 
 async function get<Entity>(

@@ -3,11 +3,20 @@ import { withDefaults } from './common';
 
 @ObjectType({ isAbstract: true })
 class Ingredients {
-    @Field()
+    @Field((type) => String, { nullable: true })
     title: string;
 
     @Field((type) => [String])
     ingredients: string[];
+}
+
+@ObjectType({ isAbstract: true })
+class Instructions {
+    @Field((type) => String, { nullable: true })
+    title: string | null;
+
+    @Field((type) => [String])
+    instructions: string[];
 }
 
 /** Common recipe properties */
@@ -38,9 +47,6 @@ class RecipeBase {
     @Field()
     time_total: number;
 
-    @Field((type) => [String])
-    instructions: string[];
-
     @Field((type) => String, { nullable: true })
     notes: string | null;
 
@@ -51,6 +57,9 @@ class RecipeBase {
 export class Recipe extends withDefaults(RecipeBase) {
     @Field((type) => [Ingredients])
     ingredients: Ingredients[];
+
+    @Field((type) => [Instructions])
+    instructions: Instructions[];
 }
 
 @InputType()
@@ -63,9 +72,21 @@ class IngredientsInput {
 }
 
 @InputType()
+class InstructionsInput {
+    @Field((type) => String, { nullable: true })
+    title: string | null;
+
+    @Field((type) => [String])
+    instructions: string[];
+}
+
+@InputType()
 export class CreateRecipeInput extends RecipeBase {
     @Field((type) => [IngredientsInput])
     ingredients: IngredientsInput[];
+
+    @Field((type) => [InstructionsInput])
+    instructions: InstructionsInput[];
 }
 
 @ObjectType()

@@ -42,7 +42,7 @@ export class RecipeResolver {
             });
         }
 
-        return await dynamoDB.put<Recipe>({
+        return await dynamoDB.create<Recipe>({
             TableName: RECIPE_TABLE,
             Item: input,
         });

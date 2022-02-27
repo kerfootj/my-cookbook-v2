@@ -46,8 +46,8 @@ export class LoginWithGoogleResolver {
             throw new ApolloError('email or name is missing from auth token');
         }
 
-        // create or update the user
-        const user = await dynamoDB.put<User>({
+        // create the user
+        const user = await dynamoDB.create<User>({
             TableName: USER_TABLE,
             Item: {
                 email,
