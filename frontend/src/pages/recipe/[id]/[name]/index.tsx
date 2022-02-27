@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/dist/client/router';
 import { ReactElement } from 'react';
 import Loading from '../../../../components/Loading';
+import { Meta } from '../../../../components/Meta';
 import { RecipeDetails } from '../../../../components/recipe/RecipeDetails';
 import { recipeQuery } from '../../../../queries/recipe';
 
@@ -19,7 +20,14 @@ const RecipePage = (): ReactElement => {
     if (loading) return <Loading />;
     if (error) return <p>Error :(</p>;
 
-    return <RecipeDetails recipe={data.recipe} />;
+    const { recipe } = data;
+
+    return (
+        <>
+            <Meta title={recipe.name} />
+            <RecipeDetails recipe={recipe} />
+        </>
+    );
 };
 
 export default RecipePage;

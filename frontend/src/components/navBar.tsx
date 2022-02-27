@@ -1,5 +1,5 @@
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import GoogleLogin, {
     GoogleLoginResponse,
     GoogleLoginResponseOffline,

@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import {
     ApolloClient,
     ApolloProvider,
@@ -105,18 +106,48 @@ function App({ Component, pageProps }: AppProps) {
     };
 
     return (
-        <ApolloProvider client={client}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <NavBar
-                    user={user}
-                    loading_auth={loading_auth}
-                    login={login}
-                    logout={logout}
+        <>
+            <Head>
+                {/* <a href="https://www.flaticon.com/free-icons/fork" title="fork icons">Fork icons created by Freepik - Flaticon</a> */}
+                <link
+                    rel="apple-touch-icon"
+                    sizes="180x180"
+                    href="/apple-touch-icon.png"
                 />
-                <Component {...pageProps} user={user} />
-            </ThemeProvider>
-        </ApolloProvider>
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="32x32"
+                    href="/favicon-32x32.png"
+                />
+                <link
+                    rel="icon"
+                    type="image/png"
+                    sizes="16x16"
+                    href="/favicon-16x16.png"
+                />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link
+                    rel="mask-icon"
+                    href="/safari-pinned-tab.svg"
+                    color="#5b86d5"
+                />
+                <meta name="msapplication-TileColor" content="#2d89ef" />
+                <meta name="theme-color" content="#6a6a6a" />
+            </Head>
+            <ApolloProvider client={client}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <NavBar
+                        user={user}
+                        loading_auth={loading_auth}
+                        login={login}
+                        logout={logout}
+                    />
+                    <Component {...pageProps} user={user} />
+                </ThemeProvider>
+            </ApolloProvider>
+        </>
     );
 }
 
