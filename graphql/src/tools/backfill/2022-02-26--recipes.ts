@@ -3,9 +3,6 @@ import { dynamoDB } from '../../library/dynamodb';
 import { Recipe } from '../../schema/recipe';
 
 async function main(): Promise<void> {
-    console.log('process.env.RecipeDB');
-    console.log(process.env.RecipeDB);
-
     console.log('getting recipes...');
 
     const { entities } = await dynamoDB.scan<Recipe>({
@@ -22,7 +19,7 @@ async function main(): Promise<void> {
                     title: null,
                     instructions: [
                         // convert to new instructions format
-                        ...(recipe.ingredients as unknown as string[]),
+                        ...(recipe.instructions as unknown as string[]),
                     ],
                 },
             ],
