@@ -1,4 +1,6 @@
 cookbook:
-    component: '@sls-next/serverless-component@3.6.0'
+    component: '@sls-next/serverless-component@3.7.0-alpha.7'
     inputs:
         domain: 'wtf2cook.ca'
+        bucketName: wtf2cook
+        bucketRegion: us-west-2

@@ -43,3 +43,14 @@ export const recipesQuery = gql`
         }
     }
 `;
+
+export const RecipesNameAndID = gql`
+    query Recipe {
+        recipes {
+            recipes {
+                id
+                name
+            }
+        }
+    }
+`;

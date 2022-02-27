@@ -29,3 +29,7 @@ export interface Instructions {
     title: string | null;
     instructions: string[];
 }
+
+export interface RecipeQueryResponse {
+    recipe: Recipe;
+}

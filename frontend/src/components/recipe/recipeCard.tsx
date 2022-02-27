@@ -33,10 +33,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }): ReactElement {
         <StyledCard>
             <Link
                 passHref
-                href={`/recipe/${id}/${name
-                    .toLowerCase()
-                    .split(' ')
-                    .join('-')}`}
+                href={`/recipe/${id}/${name.toLowerCase().replace(/ +/g, '-')}`}
             >
                 <CardActionArea>
                     <CardPhoto image={photo_url} title={name} />

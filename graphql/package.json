@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "start": "serverless offline start",
-        "deploy": "cross-env NODE_ENV=production serverless deploy --stage prod",
+        "deploy": "cross-env NODE_ENV=production SLS_DEBUG=* serverless deploy --stage prod",
         "lint": "eslint '*/**/*.{js,ts}' --quiet --fix"
     },
     "keywords": [],
@@ -40,6 +40,8 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^3.4.0",
         "prettier": "^2.3.2",
+        "serverless-deployment-bucket": "^1.5.2",
+        "serverless-domain-manager": "^6.0.2",
         "serverless-dotenv-plugin": "^3.9.0",
         "serverless-offline": "^7.0.0",
         "serverless-webpack": "^5.5.1",

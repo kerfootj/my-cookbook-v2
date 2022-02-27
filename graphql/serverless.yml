@@ -1,9 +1,13 @@
-service: apollo-lambda
+service: api-lambda
+
 provider:
     name: aws
     runtime: nodejs12.x
     region: us-west-2
     lambdaHashingVersion: 20201221
+    deploymentBucket:
+        name: api.wtf2cook.ca
+        serverSideEncryption: AES256
     environment:
         RecipeDB: ${self:custom.RecipeDB}
         UserDB: ${self:custom.UserDB}
@@ -39,10 +43,13 @@ functions:
                   path: graphql
                   method: get
                   cors: true
+
 plugins:
     - serverless-dotenv-plugin
     - serverless-offline
     - serverless-webpack
+    - serverless-deployment-bucket
+    - serverless-domain-manager
 
 custom:
     webpack:
@@ -55,6 +62,12 @@ custom:
         prod: 1
         default: 1
     tableThroughput: ${self:custom.tableThroughputs.${self:custom.stage}, self:custom.tableThroughputs.default}
+
+    customDomain:
+        domainName: api.wtf2cook.ca
+        basePath: ''
+        stage: ${self:custom.stage}
+        createRoute53Record: true
 
 resources:
     - ${file(resources/recipe-db.yml)}

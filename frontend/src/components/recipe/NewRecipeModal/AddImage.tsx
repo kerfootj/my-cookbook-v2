@@ -92,14 +92,17 @@ const ImageContainer = styled.div`
 export function AddImage(props: AddImageProps) {
     const { image, setImage } = props;
 
-    const onDrop = useCallback(async (files) => {
-        // compress the image
-        const compressed_image = await compress(files[0], { maxSizeMB: 1 });
+    const onDrop = useCallback(
+        async (files) => {
+            // compress the image
+            const compressed_image = await compress(files[0], { maxSizeMB: 1 });
 
-        // convert to base64
-        const base64 = await blobToBase64(compressed_image);
-        setImage(base64);
-    }, []);
+            // convert to base64
+            const base64 = await blobToBase64(compressed_image);
+            setImage(base64);
+        },
+        [setImage],
+    );
 
     const {
         getRootProps,
@@ -136,7 +139,7 @@ export function AddImage(props: AddImageProps) {
 }
 
 function blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, _) => {
+    return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result as string);
         reader.readAsDataURL(blob);

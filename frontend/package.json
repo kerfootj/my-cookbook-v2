@@ -4,6 +4,8 @@
     "private": true,
     "scripts": {
         "start": "next dev -p 4000",
+        "next:build": "next build",
+        "next:start": "next start -p 4004",
         "deploy": "cross-env NODE_ENV=production serverless"
     },
     "dependencies": {
@@ -16,15 +18,16 @@
         "browser-image-compression": "^1.0.17",
         "express": "^4.17.1",
         "graphql": "^15.6.1",
-        "next": "11.1.2",
-        "react": "17.0.2",
-        "react-dom": "17.0.2",
+        "next": "12.0.8",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
         "react-dropzone": "^11.4.2",
         "react-google-login": "^5.2.2",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.3",
         "react-text-truncate": "^0.17.0",
         "serverless-http": "^2.7.0",
+        "sharp": "^0.30.1",
         "styled-components": "^5.3.1",
         "web-vitals": "^1.1.2"
     },

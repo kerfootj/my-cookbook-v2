@@ -2,6 +2,7 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import Router from 'next/router';
 import {
     ApolloClient,
     ApolloProvider,
@@ -16,6 +17,7 @@ import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import { User } from '../types/user.type';
 import { loginWithGoogle } from '../mutations/auth';
+import Loading from '../components/Loading';
 
 /** Globals */
 const TOKEN = 'wtf2cook_token';
@@ -58,6 +60,7 @@ const client = new ApolloClient({
 
 function App({ Component, pageProps }: AppProps) {
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(false);
     const [loading_auth, setLoadingAuth] = useState(true);
 
     // build login with google mutation
@@ -94,6 +97,20 @@ function App({ Component, pageProps }: AppProps) {
         } else {
             setLoadingAuth(false);
         }
+    }, []);
+
+    useEffect(() => {
+        const start = () => setLoading(true);
+        const stop = () => setLoading(false);
+
+        Router.events.on('routeChangeStart', start);
+        Router.events.on('routeChangeComplete', stop);
+        Router.events.on('routeChangeError', stop);
+        return () => {
+            Router.events.off('routeChangeStart', start);
+            Router.events.off('routeChangeComplete', stop);
+            Router.events.off('routeChangeError', stop);
+        };
     }, []);
 
     const login = (id_token: string) => {
@@ -144,7 +161,11 @@ function App({ Component, pageProps }: AppProps) {
                         login={login}
                         logout={logout}
                     />
-                    <Component {...pageProps} user={user} />
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <Component {...pageProps} user={user} />
+                    )}
                 </ThemeProvider>
             </ApolloProvider>
         </>

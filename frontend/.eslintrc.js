@@ -41,6 +41,8 @@ module.exports = {
         'no-use-before-define': 'off',
         'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],
         'react/react-in-jsx-scope': 'off',
+        'react-hooks/exhaustive-deps': 'off',
+        'react/no-array-index-key': 'off',
         camelcase: 'off',
     },
     ignorePatterns: ['next.config.*'],

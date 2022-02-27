@@ -7,7 +7,7 @@ import { RecipeCard } from '../components/recipe/RecipeCard';
 import { recipesQuery } from '../queries/recipe';
 import { Recipe } from '../types/recipe.type';
 
-const Home = (): ReactElement => {
+export default function Home(): ReactElement {
     const { loading, error, data } =
         useQuery<{ recipes: { recipes: Recipe[] } }>(recipesQuery);
 
@@ -29,6 +29,4 @@ const Home = (): ReactElement => {
             </Grid>
         </PageComponent>
     );
-};
-
-export default Home;
+}
