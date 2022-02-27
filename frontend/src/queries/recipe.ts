@@ -22,7 +22,10 @@ export const recipeQuery = gql`
                 title
                 ingredients
             }
-            instructions
+            instructions {
+                title
+                instructions
+            }
         }
     }
 `;

@@ -63,9 +63,7 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
     const [name, setName] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [servings, setServings] = useState<number | null>(null);
-    const [ingredients, setIngredients] = useState<T.Recipe['ingredients']>([
-        {} as T.Ingredients,
-    ]);
+    const [ingredients, setIngredients] = useState<T.Recipe['ingredients']>([]);
     const [instructions, setInstructions] = useState<T.Recipe['instructions']>(
         [],
     );
@@ -133,18 +131,14 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
         }
 
         if (step === 2) {
-            if (
-                !ingredients.length ||
-                !ingredients[0].ingredients.length ||
-                !ingredients[0].ingredients[0]
-            ) {
+            if (!ingredients.length || !ingredients[0].ingredients?.length) {
                 setError(`Looks bland, try adding some ingredients.`);
                 return;
             }
         }
 
         if (step === 3) {
-            if (!instructions.length || !instructions[0]) {
+            if (!instructions.length || !instructions[0].instructions?.length) {
                 setError(`That's confusing, try adding some instructions.`);
                 return;
             }

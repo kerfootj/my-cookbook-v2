@@ -39,6 +39,7 @@ export function Timings(props: TimingsProps): ReactElement {
                 onChange={handleTimeChange}
                 fullWidth
                 margin="normal"
+                autoComplete="off"
             />
             <TextField
                 label="Cook Time"
@@ -48,6 +49,7 @@ export function Timings(props: TimingsProps): ReactElement {
                 onChange={handleTimeChange}
                 fullWidth
                 margin="normal"
+                autoComplete="off"
             />
             <TextField
                 label="Chill Time"
@@ -57,6 +59,7 @@ export function Timings(props: TimingsProps): ReactElement {
                 onChange={handleTimeChange}
                 fullWidth
                 margin="normal"
+                autoComplete="off"
             />
             <TextField
                 label="Total Time"
@@ -66,6 +69,7 @@ export function Timings(props: TimingsProps): ReactElement {
                 onChange={handleTimeChange}
                 fullWidth
                 margin="normal"
+                autoComplete="off"
             />
         </>
     );

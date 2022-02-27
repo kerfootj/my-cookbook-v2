@@ -102,7 +102,7 @@ const List = styled.ul<ListProps>`
     padding: 0px;
 `;
 
-const IngredientsGroup = styled.div`
+const ListGroup = styled.div`
     font-family: 'Bitter', Georgia, sans-serif;
 `;
 
@@ -240,25 +240,42 @@ function IngredientsList({
     title: string | null;
 }): ReactElement {
     return (
-        <IngredientsGroup>
+        <ListGroup>
             {title && <Caption>{title}</Caption>}
             <List type="disc">
                 {ingredients.map((ingredient) => (
                     <ListItem key={ingredient}>{ingredient}</ListItem>
                 ))}
             </List>
-        </IngredientsGroup>
+        </ListGroup>
     );
 }
 
 function Instructions({ recipe }: { recipe: Recipe }): ReactElement {
-    const { instructions } = recipe;
-
     return (
-        <List type="decimal">
-            {instructions.map((instruction, index) => (
-                <ListItem key={`step-${index + 1}`}>{instruction}</ListItem>
-            ))}
-        </List>
+        <>
+            {recipe.instructions.map(({ instructions, title }) =>
+                InstructionsList({ instructions, title }),
+            )}
+        </>
+    );
+}
+
+function InstructionsList({
+    instructions,
+    title,
+}: {
+    instructions: string[];
+    title: string | null;
+}): ReactElement {
+    return (
+        <ListGroup>
+            {title && <Caption>{title}</Caption>}
+            <List type="decimal">
+                {instructions.map((instruction) => (
+                    <ListItem key={instruction}>{instruction}</ListItem>
+                ))}
+            </List>
+        </ListGroup>
     );
 }

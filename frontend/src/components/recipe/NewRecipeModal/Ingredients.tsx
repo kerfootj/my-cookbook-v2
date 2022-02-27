@@ -7,26 +7,28 @@ import {
 import { IconButton, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ReactElement, useState } from 'react';
-import * as T from '../../../types/recipe.type';
+import * as R from '../../../types/recipe.type';
 import { container, filler, small } from './styles';
 
 /** types */
 interface IngredientsProps {
-    ingredients: T.Recipe['ingredients'];
-    setIngredients: (ingredients: T.Recipe['ingredients']) => void;
+    ingredients: R.Ingredients[];
+    setIngredients: (ingredients: R.Ingredients[]) => void;
 }
 
 export function Ingredients(props: IngredientsProps): ReactElement {
     const { ingredients, setIngredients } = props;
 
     // manage tab state
-    const [totalSections, setTotalSections] = useState(ingredients.length);
+    const [totalSections, setTotalSections] = useState(
+        Math.max(ingredients.length, 1),
+    );
     const [currentSection, setCurrentSection] = useState(1);
 
     // add section
     const addSection = () => {
         const updated_ingredients = [...ingredients];
-        updated_ingredients.splice(currentSection, 0, {} as T.Ingredients);
+        updated_ingredients.splice(currentSection, 0, {} as R.Ingredients);
 
         setIngredients(updated_ingredients);
         setTotalSections(totalSections + 1);
@@ -51,6 +53,10 @@ export function Ingredients(props: IngredientsProps): ReactElement {
         const { title, list } = input;
 
         const updated_ingredients = [...ingredients];
+
+        if (!updated_ingredients[currentSection - 1]) {
+            updated_ingredients[currentSection - 1] = {} as R.Ingredients;
+        }
 
         if (title !== undefined) {
             updated_ingredients[currentSection - 1].title = title;

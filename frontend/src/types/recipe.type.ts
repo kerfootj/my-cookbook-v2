@@ -13,7 +13,7 @@ export interface Recipe {
     time_total: number; // mins
 
     ingredients: Ingredients[];
-    instructions: string[];
+    instructions: Instructions[];
 
     notes?: string;
 
@@ -21,6 +21,11 @@ export interface Recipe {
 }
 
 export interface Ingredients {
-    title: string;
+    title: string | null;
     ingredients: string[];
+}
+
+export interface Instructions {
+    title: string | null;
+    instructions: string[];
 }
