@@ -1,7 +1,15 @@
 import { AccountCircle } from '@mui/icons-material';
-import { Avatar, IconButton, Menu, MenuItem } from '@mui/material';
+import {
+    Avatar,
+    IconButton,
+    Menu,
+    MenuItem,
+    useMediaQuery,
+} from '@mui/material';
+import { useTheme } from '@mui/system';
 import React, { useState } from 'react';
 import { User } from '../../types/user.type';
+import { NewRecipeModal } from '../recipe/NewRecipeModal';
 
 /** Types */
 interface UserMenuProps {
@@ -11,6 +19,11 @@ interface UserMenuProps {
 
 export const UserMenu: React.FC<UserMenuProps> = (props) => {
     const { user, logout } = props;
+
+    const [open_new_recipe, setOpenNewRecipe] = useState(false);
+
+    const theme = useTheme();
+    const sm_down = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -33,7 +46,7 @@ export const UserMenu: React.FC<UserMenuProps> = (props) => {
                 <Avatar
                     alt={user.name}
                     src={user.picture}
-                    sx={{ width: 32, height: 32 }}
+                    sx={{ width: 40, height: 40 }}
                     imgProps={{ referrerPolicy: 'no-referrer' }}
                     onClick={handleMenu}
                     style={{ cursor: 'pointer' }}
@@ -58,8 +71,18 @@ export const UserMenu: React.FC<UserMenuProps> = (props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                {sm_down && (
+                    <MenuItem onClick={() => setOpenNewRecipe(true)}>
+                        Add Recipe
+                    </MenuItem>
+                )}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
+            <NewRecipeModal
+                user={user}
+                open={open_new_recipe}
+                onClose={() => setOpenNewRecipe(false)}
+            />
         </>
     );
 };

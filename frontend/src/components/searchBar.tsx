@@ -1,6 +1,6 @@
 import { Divider, IconButton, InputBase, Paper } from '@mui/material';
-import { Search } from '@mui/icons-material';
-import React from 'react';
+import { AddBox, Search } from '@mui/icons-material';
+import React, { useState } from 'react';
 import { User } from '../types/user.type';
 import { NewRecipeModal } from './recipe/NewRecipeModal';
 
@@ -10,6 +10,8 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ user }) => {
+    const [open_new_recipe, setOpenNewRecipe] = useState(false);
+
     return (
         <Paper
             component="form"
@@ -35,7 +37,18 @@ const SearchBar: React.FC<SearchBarProps> = ({ user }) => {
                         sx={{ height: 28, m: 0.5 }}
                         orientation="vertical"
                     />
-                    <NewRecipeModal user={user} />
+                    <IconButton
+                        sx={{ p: '10px' }}
+                        aria-label="new recipes"
+                        onClick={() => setOpenNewRecipe(true)}
+                    >
+                        <AddBox />
+                    </IconButton>
+                    <NewRecipeModal
+                        user={user}
+                        open={open_new_recipe}
+                        onClose={() => setOpenNewRecipe(false)}
+                    />
                 </>
             )}
         </Paper>

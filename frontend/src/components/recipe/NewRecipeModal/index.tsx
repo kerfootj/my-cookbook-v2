@@ -30,6 +30,8 @@ import Loading from '../../Loading';
 /** Types */
 interface NewRecipeModalProps {
     user: User;
+    open: boolean;
+    onClose: () => void;
 }
 
 /** Globals */
@@ -54,9 +56,8 @@ const ErrorMessage = styled(Typography)`
 `;
 
 export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
-    const { user } = props;
+    const { user, open, onClose } = props;
 
-    const [open, setOpen] = useState(false);
     const [step, setStep] = useState(1);
 
     // recipe data
@@ -88,7 +89,8 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
 
         setError(null);
         setStep(1);
-        setOpen(false);
+
+        onClose();
     };
 
     const [createRecipeMutation, { loading }] = useMutation<
@@ -200,13 +202,6 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
 
     return (
         <>
-            <IconButton
-                sx={{ p: '10px' }}
-                aria-label="new recipes"
-                onClick={() => setOpen(true)}
-            >
-                <AddBox />
-            </IconButton>
             <Modal open={open} onClose={handleClose}>
                 <Box sx={box_style}>
                     <Typography variant="h6">

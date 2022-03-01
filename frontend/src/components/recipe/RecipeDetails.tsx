@@ -1,4 +1,5 @@
 import { Paper } from '@mui/material';
+import { useTheme } from '@mui/system';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { Recipe } from '../../types/recipe.type';
@@ -31,11 +32,13 @@ const Spacer = styled.div<SpacerProps>`
 `;
 
 const ImageContainer = styled.div`
-    float: right;
     margin: 0 0 10px 10px;
     text-align: center;
     position: relative;
     z-index: 1;
+    ${(props) => props.theme.breakpoints.up('sm')} {
+        float: right;
+    }
 `;
 
 const Image = styled.img`
@@ -50,6 +53,7 @@ const Title = styled.h2`
     margin: 0px 0 8px;
     font-weight: 600;
     font-size: 36px;
+    line-height: 1em;
 `;
 
 const Subtitle = styled.div`
@@ -76,18 +80,14 @@ const MetaDataContainer = styled.div`
     letter-spacing: 0.1em;
 `;
 
-const TimesContainer = styled.div`
-    margin-left: 1.4em;
-    display: inline;
-`;
-
-const Time = styled.div`
+const MetaData = styled.div`
     display: inline-block;
     margin-right: 1.4em;
 `;
 
 const Description = styled.div`
     font-style: italic;
+    line-height: 1.3em;
 `;
 
 const ContentContainer = styled.div`
@@ -118,12 +118,14 @@ const ListItem = styled.li`
  * Recipe Details
  */
 export function RecipeDetails({ recipe }: RecipeDetailsProps): ReactElement {
-    const { name, description, photo_url, servings, notes } = recipe;
+    const { name, description, photo_url, notes } = recipe;
+
+    const theme = useTheme();
 
     return (
         <RecipeContainer>
             {photo_url && (
-                <ImageContainer>
+                <ImageContainer theme={theme}>
                     <Image src={photo_url} alt={name} />
                     <Spacer />
                 </ImageContainer>
@@ -131,19 +133,12 @@ export function RecipeDetails({ recipe }: RecipeDetailsProps): ReactElement {
 
             <Title>{name}</Title>
             <Spacer />
+            {description && <Description>{description}</Description>}
+            <Spacer />
 
-            <MetaDataContainer>
-                <span>servings: </span>
-                <span>{servings}</span>
-
-                <RecipeTime recipe={recipe} />
-            </MetaDataContainer>
+            <RecipeTime recipe={recipe} />
 
             <Spacer multiplier={2} />
-
-            {description && <Description>{description}</Description>}
-
-            <Spacer />
 
             <ContentContainer>
                 <Subtitle>Ingredients</Subtitle>
@@ -192,42 +187,51 @@ function RecipeTime({ recipe }: { recipe: Recipe }): ReactElement {
     };
 
     return (
-        <TimesContainer>
-            <Time>
+        <MetaDataContainer>
+            <MetaData>
+                <span>servings: </span>
+                <span>{recipe.servings}</span>
+            </MetaData>
+
+            <MetaData>
                 <span>prep time: </span>
                 <span>{formatTime(time_prep)}</span>
-            </Time>
+            </MetaData>
 
             {(time_cook && (
-                <Time>
+                <MetaData>
                     <span>cook time: </span>
                     <span>{formatTime(time_cook)}</span>
-                </Time>
+                </MetaData>
             )) ||
                 undefined}
 
             {(time_chill && (
-                <Time>
+                <MetaData>
                     <span>chilling time: </span>
                     <span>{formatTime(time_chill)}</span>
-                </Time>
+                </MetaData>
             )) ||
                 undefined}
 
-            <Time>
+            <MetaData>
                 <span>total time: </span>
                 <span>{formatTime(time_total)}</span>
-            </Time>
-        </TimesContainer>
+            </MetaData>
+        </MetaDataContainer>
     );
 }
 
 function Ingredients({ recipe }: { recipe: Recipe }): ReactElement {
     return (
         <>
-            {recipe.ingredients.map(({ ingredients, title }) =>
-                IngredientsList({ ingredients, title }),
-            )}
+            {recipe.ingredients.map(({ ingredients, title }, i) => (
+                <IngredientsList
+                    key={`ingredients-${i}`}
+                    ingredients={ingredients}
+                    title={title}
+                />
+            ))}
         </>
     );
 }
@@ -244,7 +248,9 @@ function IngredientsList({
             {title && <Caption>{title}</Caption>}
             <List type="disc">
                 {ingredients.map((ingredient) => (
-                    <ListItem key={ingredient}>{ingredient}</ListItem>
+                    <ListItem key={generateKey(ingredient)}>
+                        {ingredient}
+                    </ListItem>
                 ))}
             </List>
         </ListGroup>
@@ -254,9 +260,13 @@ function IngredientsList({
 function Instructions({ recipe }: { recipe: Recipe }): ReactElement {
     return (
         <>
-            {recipe.instructions.map(({ instructions, title }) =>
-                InstructionsList({ instructions, title }),
-            )}
+            {recipe.instructions.map(({ instructions, title }, i) => (
+                <InstructionsList
+                    key={`instructions-${i}`}
+                    instructions={instructions}
+                    title={title}
+                />
+            ))}
         </>
     );
 }
@@ -273,9 +283,15 @@ function InstructionsList({
             {title && <Caption>{title}</Caption>}
             <List type="decimal">
                 {instructions.map((instruction) => (
-                    <ListItem key={instruction}>{instruction}</ListItem>
+                    <ListItem key={generateKey(instruction)}>
+                        {instruction}
+                    </ListItem>
                 ))}
             </List>
         </ListGroup>
     );
+}
+
+function generateKey(input: string): string {
+    return input.substring(0, 16).trim().toLowerCase().replace(/ +/g, '-');
 }
