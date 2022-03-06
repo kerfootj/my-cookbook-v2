@@ -16,10 +16,7 @@ export class RecipeResolver {
     }
 
     @Query(() => RecipesResponse)
-    async recipes(): Promise<{
-        recipes: Recipe[];
-        cursor: string | null;
-    }> {
+    async recipes(): Promise<RecipesResponse> {
         const { entities, cursor } = await dynamoDB.scan<Recipe>({
             TableName: RECIPE_TABLE,
         });

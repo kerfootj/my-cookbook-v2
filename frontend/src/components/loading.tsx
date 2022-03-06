@@ -1,16 +1,14 @@
 import { Grid } from '@mui/material';
-import React from 'react';
 import Image from 'next/image';
-import loading from '../../public/loading.gif';
+import loading from '../../public/images/loading.gif';
+import { imageLoader } from '../common/imageLoader';
 
-const Loading: React.FC = () => {
+export default function Loading() {
     return (
         <Grid container justifyContent="center">
             <Grid item>
-                <Image src={loading} alt="loading" />
+                <Image src={loading} alt="loading" loader={imageLoader()} />
             </Grid>
         </Grid>
     );
-};
-
-export default Loading;
+}
