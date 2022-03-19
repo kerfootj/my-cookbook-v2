@@ -8,7 +8,7 @@ export async function uploadToImgur(base64: string): Promise<string> {
 
     // build body
     const body = new FormData();
-    const data = base64.substr(base64.indexOf(',') + 1); // strip prefix
+    const data = base64.substring(base64.indexOf(',') + 1); // strip prefix
     body.append('image', data);
 
     // upload to imgur
