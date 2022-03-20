@@ -1,12 +1,5 @@
 import { AccountCircle } from '@mui/icons-material';
-import {
-    Avatar,
-    IconButton,
-    Menu,
-    MenuItem,
-    useMediaQuery,
-} from '@mui/material';
-import { useTheme } from '@mui/system';
+import { Avatar, IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
 import { User } from '../../types/user.type';
 import { NewRecipeModal } from '../recipe/NewRecipeModal';
@@ -21,9 +14,6 @@ export const UserMenu: React.FC<UserMenuProps> = (props) => {
     const { user, logout } = props;
 
     const [open_new_recipe, setOpenNewRecipe] = useState(false);
-
-    const theme = useTheme();
-    const sm_down = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -71,11 +61,6 @@ export const UserMenu: React.FC<UserMenuProps> = (props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                {sm_down && (
-                    <MenuItem onClick={() => setOpenNewRecipe(true)}>
-                        Add Recipe
-                    </MenuItem>
-                )}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
             <NewRecipeModal

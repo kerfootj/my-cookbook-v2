@@ -7,8 +7,8 @@ import {
 import { IconButton, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ReactElement, useState } from 'react';
-import * as R from '../../../types/recipe.type';
-import { container, filler, small } from './styles';
+import * as R from '../../../../types/recipe.type';
+import { container, filler, small } from '../styles';
 
 /** types */
 interface IngredientsProps {
@@ -88,7 +88,7 @@ export function Ingredients(props: IngredientsProps): ReactElement {
                 fullWidth
                 margin="normal"
                 multiline
-                rows={6}
+                rows={12}
                 value={
                     ingredients[currentSection - 1]?.ingredients?.join('\n') ||
                     ''

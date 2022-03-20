@@ -43,6 +43,7 @@ module.exports = {
         'react/react-in-jsx-scope': 'off',
         'react-hooks/exhaustive-deps': 'off',
         'react/no-array-index-key': 'off',
+        'react/require-default-props': 'off',
         camelcase: 'off',
     },
     ignorePatterns: ['next.config.*'],

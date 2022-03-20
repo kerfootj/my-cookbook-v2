@@ -32,6 +32,26 @@ const theme = createTheme({
             fontFamily: ['Bitter', 'Georgia', 'sans-serif'].join(),
         },
     },
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                body: {
+                    // scrollbarColor: '#6b6b6b #2b2b2b',
+                    '*::-webkit-scrollbar': {
+                        width: '8px',
+                    },
+                    '*::-webkit-scrollbar-track': {
+                        background: '#272727',
+                    },
+                    '*::-webkit-scrollbar-thumb': {
+                        borderRadius: 8,
+                        background: '#696969',
+                        minHeight: 24,
+                    },
+                },
+            },
+        },
+    },
 });
 
 const base_link = createHttpLink({

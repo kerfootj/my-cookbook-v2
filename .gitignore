@@ -14,6 +14,9 @@
 */.serverless
 */.webpack
 
+# frontend test data
+/frontend/src/data
+
 # graphql
 */schema.gql
 
