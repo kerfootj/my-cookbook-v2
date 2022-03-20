@@ -7,6 +7,7 @@ import { Recipe } from '../../types/recipe.type';
 /** Interfaces */
 interface RecipeDetailsProps {
     recipe: Recipe;
+    preview?: boolean;
 }
 
 interface SpacerProps {
@@ -20,7 +21,6 @@ interface ListProps {
 /** Styled Components */
 const RecipeContainer = styled(Paper)`
     padding: 24px;
-    margin: 16px auto;
     font-size: 15px;
     line-height: 1.6em;
     max-width: 800px;
@@ -117,13 +117,16 @@ const ListItem = styled.li`
 /**
  * Recipe Details
  */
-export function RecipeDetails({ recipe }: RecipeDetailsProps): ReactElement {
+export function RecipeDetails({
+    recipe,
+    preview,
+}: RecipeDetailsProps): ReactElement {
     const { name, description, photo_url, notes } = recipe;
 
     const theme = useTheme();
 
     return (
-        <RecipeContainer>
+        <RecipeContainer sx={{ margin: preview ? null : '16px auto' }}>
             {photo_url && (
                 <ImageContainer theme={theme}>
                     <Image src={photo_url} alt={name} />

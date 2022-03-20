@@ -7,8 +7,8 @@ import {
 import { IconButton, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ReactElement, useState } from 'react';
-import * as R from '../../../types/recipe.type';
-import { container, filler, small } from './styles';
+import * as R from '../../../../types/recipe.type';
+import { container, filler, small } from '../styles';
 
 /** types */
 interface InstructionsProps {
@@ -88,7 +88,7 @@ export function Instructions(props: InstructionsProps): ReactElement {
                 fullWidth
                 margin="normal"
                 multiline
-                rows={6}
+                rows={12}
                 value={
                     instructions[currentSection - 1]?.instructions?.join(
                         '\n',

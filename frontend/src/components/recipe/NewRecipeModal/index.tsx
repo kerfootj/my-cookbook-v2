@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import { useMutation } from '@apollo/client';
 import {
     Box,
@@ -7,27 +6,30 @@ import {
     LinearProgress,
     Modal,
     Typography,
+    useTheme,
 } from '@mui/material';
-import { SxProps } from '@mui/system';
-import React, { useState } from 'react';
 import Router from 'next/router';
-import styled from 'styled-components';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { uploadToImgur } from '../../../common/imgur';
 import { createRecipe } from '../../../mutations/recipe';
 import * as T from '../../../types/recipe.type';
-import { AddImage } from './AddImage';
-import { Ingredients } from './Ingredients';
-import { Instructions } from './Instructions';
-import { RecipeNameAndDescription } from './NameAndDescription';
-import { RecipePreview } from './RecipePreview';
-import { container, filler } from './styles';
-import { Times, Timings } from './Timings';
 import { User } from '../../../types/user.type';
 import Loading from '../../Loading';
+import {
+    AddImage,
+    Ingredients,
+    Instructions,
+    RecipeNameAndDescription,
+    RecipePreview,
+    Times,
+    Timings,
+} from './RecipeFormSections';
+import { box_style, container, filler } from './styles';
 
 /** Types */
 interface NewRecipeModalProps {
     user: User;
+    recipe?: T.Recipe;
     open: boolean;
     onClose: () => void;
 }
@@ -35,26 +37,8 @@ interface NewRecipeModalProps {
 /** Globals */
 const TOTAL_STEPS = 5;
 
-/** Styles */
-const box_style: SxProps = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000000b0',
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 2,
-};
-
-const ErrorMessage = styled(Typography)`
-    color: #ff2c2c;
-`;
-
 export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
-    const { user, open, onClose } = props;
+    const { user, recipe, open, onClose } = props;
 
     const [step, setStep] = useState(1);
 
@@ -75,6 +59,23 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
     const [image, setImage] = useState<string | null>(null);
 
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (recipe) {
+            setName(recipe.name);
+            setDescription(recipe.description || null);
+            setImage(recipe.photo_url || null);
+            setServings(recipe.servings);
+            setIngredients(recipe.ingredients);
+            setInstructions(recipe.instructions);
+            setTimes({
+                chill: recipe.time_chill || null,
+                cook: recipe.time_cook || null,
+                prep: recipe.time_prep,
+                total: recipe.time_total,
+            });
+        }
+    }, [recipe, open]);
 
     const resetState = () => {
         setName(null);
@@ -159,8 +160,8 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
         setStep(step + 1);
     };
 
-    const getRecipeFromState = (): T.Recipe => {
-        const recipe = {
+    const getRecipeFromState = (): T.Recipe =>
+        ({
             name,
             description,
             photo_url: image,
@@ -171,20 +172,21 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
             time_total: times.total,
             time_chill: times.chill,
             time_cook: times.cook,
-        } as T.Recipe;
-
-        return recipe;
-    };
+        } as T.Recipe);
 
     const handleSubmit = async () => {
         // upload image to imgur
         let photo_url: string | undefined;
-        if (image) {
+
+        if (image && image.startsWith('data:image')) {
             try {
                 photo_url = await uploadToImgur(image);
             } catch (_) {
                 setError('Sorry, image failed to upload. Please try again.');
+                return;
             }
+        } else if (image && image.startsWith('https://i.imgur.com')) {
+            photo_url = image;
         }
 
         createRecipeMutation({
@@ -198,19 +200,55 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
         });
     };
 
+    const theme = useTheme();
+
+    const ModalHeader = (): ReactElement | null => {
+        return step < 6 ? (
+            <>
+                <Typography variant="h6">
+                    {
+                        {
+                            1: 'Submit a New Recipe',
+                            2: 'Ingredients',
+                            3: 'Instructions',
+                            4: 'Cook Time',
+                            5: 'Add a Photo',
+                        }[step]
+                    }
+                </Typography>
+                <Divider sx={{ marginTop: 1 }} />
+            </>
+        ) : null;
+    };
+
+    const BackButton = (): ReactElement =>
+        step === 1 ? (
+            <Button onClick={handleClose} disabled={loading} sx={{ mr: 1 }}>
+                Close
+            </Button>
+        ) : (
+            <Button onClick={handleBack} disabled={loading} sx={{ mr: 1 }}>
+                Back
+            </Button>
+        );
+
+    const NextButton = (): ReactElement =>
+        step === 6 ? (
+            <Button onClick={handleSubmit} sx={{ ml: 1 }} disabled={loading}>
+                Submit
+            </Button>
+        ) : (
+            <Button onClick={handleNext} sx={{ ml: 1 }} disabled={loading}>
+                {step === 5 ? 'Preview' : 'Next'}
+            </Button>
+        );
+
     return (
         <>
             <Modal open={open} onClose={handleClose}>
-                <Box sx={box_style}>
-                    <Typography variant="h6">
-                        {step === 1 && 'Submit a New Recipe'}
-                        {step === 2 && 'Ingredients'}
-                        {step === 3 && 'Instructions'}
-                        {step === 4 && 'Cook Time'}
-                        {step === 5 && 'Add a Photo'}
-                    </Typography>
-                    <Divider sx={{ marginTop: 1 }} />
-                    <Box component="form">
+                <Box sx={box_style(theme, step)}>
+                    <ModalHeader />
+                    <Box component="form" sx={{ height: 'inherit' }}>
                         {step === 1 && (
                             <RecipeNameAndDescription
                                 name={name}
@@ -249,43 +287,24 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
                         )}
                         {step === 6 && loading && <Loading />}
                         {error && (
-                            <ErrorMessage variant="caption">
+                            <Typography
+                                variant="caption"
+                                sx={{ color: '#ff2c2c' }}
+                            >
                                 {error}
-                            </ErrorMessage>
+                            </Typography>
                         )}
                     </Box>
                     <Divider />
                     <Box sx={container}>
-                        <Button
-                            onClick={handleBack}
-                            disabled={step === 1 || loading}
-                            sx={{ mr: 1 }}
-                        >
-                            Back
-                        </Button>
+                        <BackButton />
                         <Box sx={filler}>
                             <LinearProgress
                                 variant="determinate"
                                 value={((step - 1) / TOTAL_STEPS) * 100}
                             />
                         </Box>
-                        {step === 5 ? (
-                            <Button onClick={handleNext} sx={{ ml: 1 }}>
-                                Preview
-                            </Button>
-                        ) : step === 6 ? (
-                            <Button
-                                onClick={handleSubmit}
-                                sx={{ ml: 1 }}
-                                disabled={loading}
-                            >
-                                Submit
-                            </Button>
-                        ) : (
-                            <Button onClick={handleNext} sx={{ ml: 1 }}>
-                                Next
-                            </Button>
-                        )}
+                        <NextButton />
                     </Box>
                 </Box>
             </Modal>

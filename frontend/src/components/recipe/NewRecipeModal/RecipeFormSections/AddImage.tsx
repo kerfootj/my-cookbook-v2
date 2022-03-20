@@ -58,8 +58,8 @@ const DropZone = styled.div`
 `;
 
 const RecipeImage = styled.img`
-    height: 300px;
-    width: 364px;
+    height: 400px;
+    width: -webkit-fill-available;
     object-fit: cover;
     padding: 8px 0;
     z-index: -1;
