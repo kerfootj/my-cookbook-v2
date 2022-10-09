@@ -22,7 +22,7 @@ export class RecipeResolver {
         });
 
         return {
-            recipes: entities,
+            recipes: entities.sort(() => Math.random() - 0.5),
             cursor,
         };
     }

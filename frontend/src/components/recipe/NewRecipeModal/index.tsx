@@ -100,7 +100,11 @@ export const NewRecipeModal: React.FC<NewRecipeModalProps> = (props) => {
     >(createRecipe, {
         onCompleted: (result) => {
             resetState();
-            Router.push(`recipe/${result.createRecipe.id}`);
+            Router.push(
+                `recipe/${result.createRecipe.id}/${name
+                    ?.toLowerCase()
+                    .replace(/ /g, '-')}`,
+            );
         },
         onError: () => {
             setError('Oops, something got burnt. Please try again.');

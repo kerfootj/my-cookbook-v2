@@ -21,6 +21,7 @@ const CardPhoto = styled(CardMedia)`
 
 const CardTitle = styled(Typography)`
     font-weight: 600;
+    line-height: normal;
 `;
 
 const CardDescription = styled(Typography)`
