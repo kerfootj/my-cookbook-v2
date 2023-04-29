@@ -1,5 +1,9 @@
 {
-  "eslint.workingDirectories": [{ "mode": "auto" }],
-  "prettier.prettierPath": "c:\\Users\\Joel Kerfoot\\Projects\\cook-book-v2\\graphql\\node_modules\\prettier\\index.js",
-  "cSpell.words": ["imgur"]
+    "editor.codeActionsOnSave": ["source.sortImports", "source.fixAll.eslint"],
+    "eslint.options": {
+        "fixTypes": ["problem", "suggestion", "layout"]
+    },
+    "eslint.packageManager": "yarn",
+    "eslint.workingDirectories": [{ "mode": "auto" }],
+    "cSpell.words": ["dotenv", "imgur", "Kerfoot", "Throughputs"]
 }
